@@ -1,23 +1,21 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use('/', (req, res, next) => {
-    console.log('This always runs!!');
-    // next() passes control to the next middleware in the chain
-    // Use it when you want to continue processing (not sending a response here)
-    // Don't call it if you've already sent a response with res.send(), res.json(), etc.
-    next();
-})
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Specifying '/' as the path makes this middleware execute for all incoming requests
 app.use('/add-product', (req, res, next) => {
-    console.log('In the middleware!!')
-    res.send('<h1>This is "add-product" Page</h1>');
+    res.send('<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>');
+});
+
+app.use('/product', (req, res, next) => {
+    console.log(req.body);
+    res.redirect('/');
 });
 
 app.use('/', (req, res, next) => {
-    console.log('In the middleware!!')
     res.send('<h1>Hello from Express!!</h1>');
 });
 
